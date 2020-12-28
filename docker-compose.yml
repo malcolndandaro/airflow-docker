@@ -18,6 +18,7 @@ services:
   - "8080:8080"
   volumes:
    - ./dags:/app/airflow/dags
+   - ./requirements.txt:/app/airflow/requirements.txt
   environment:
    - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
    - AIRFLOW__CORE__EXECUTOR=LocalExecutor
