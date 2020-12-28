@@ -1,11 +1,11 @@
 # airflow
-Docker-compose que utilizo para rodar [Airflow](https://airflow.apache.org/) em ambientes de dev/teste/mvp.
+Docker-compose que estou utilizando para rodar o [Airflow](https://airflow.apache.org/) em ambientes de dev/teste/mvp.
 
 ## O Airflow não possui uma imagem oficial?
 
-A [imagem oficial disponibilizada pelo Airflow](https://hub.docker.com/r/apache/airflow) não possui um setup simples e intuitivo, o que dificulta a utilização para testes, projetos simples pilotos de um MVP inicial. Porém, para ambientes de produção, é recomendado que se utilize a imagem oficial seguindo todas suas guidelines.
+A [imagem oficial disponibilizada pelo Airflow](https://hub.docker.com/r/apache/airflow) não possui um setup simples e intuitivo, o que dificulta a utilização para testes, projetos simples e inicio de um MVP. Porém, para ambientes de produção, é recomendado que se utilize a imagem oficial.
 
-Além da imagem oficial, o repositório [puckel/docker-airflow](https://github.com/puckel/docker-airflow) era o padrão adotado pela comunidade (até o lançamento da imagem oficial em 2020). Porém, está versão 1.10.8 e não é mais mantido, o que me fez procurar outra solução.
+Além da imagem oficial, o repositório [puckel/docker-airflow](https://github.com/puckel/docker-airflow) possui a imagem adotada como padrão pela comunidade, mas após o lançamento da imagem oficial (inicio 2020) ele não está sendo mais atualizado/mantido.
 
 ## Requerimentos
 * docker
@@ -15,11 +15,14 @@ Além da imagem oficial, o repositório [puckel/docker-airflow](https://github.c
 
     ├── airflow-server            # Dockerfile e entrypoint para construção da imagem
         ├── docker-entrypoint.sh  
-        ├── Dockerfile          
-    ├── postgres                  # Base de dados do container do Postgres
-    ├── dags                      # Armazenar os dags, mapeado dentro do container do airflow
-    ├── docker-compose.yml        # Arquivo compose para subir os containers
+        ├── Dockerfile
+    ├── dags                      # Armazenar os dags, mapeado dentro do container do airflow          
+    ├── postgres                  
+        ├── data                  # Base de dados do container do Postgres (criada ao rodar)
     ├── README.md
+    ├── docker-compose.yml        # Arquivo compose para subir os containers
+    ├── requirements.txt          # Requirements para serem instlados na imagem (instalados pelo entrypoint)
+
 
 ## Instalação
 Docker e docker-compose
@@ -46,6 +49,10 @@ Git clone
 Usuário para acesso ao Airflow UI: `admin/admin` Definido no arquivo > `airflow-server/docker-entrypoint.sh`
 
 Usuário para acesso ao Postgres: `airflow/airflow` *Este é o usuario que o Airflow utiliza para se conectar com seu backend*
+
+## Requirements.txt
+
+O arquivo requirements `./requirements.txt` será executado com o `pip3 install --no-cache-dir -r` sempre que o container iniciar, atraves do arquivo `./airflow-server/docker-entrypoint.sh`
 
 ## DAGS
 
@@ -90,8 +97,9 @@ Utilizando o ID ou NAME do container para acesso
 
 ## Sobre o arquivo docker-entrypoint.sh
 
-O arquivo `airflow-server/docker-entrypoint.sh` tem a finalidade de start os serviços
+O arquivo `airflow-server/docker-entrypoint.sh` executa os passos:
 
+- pip install --no-cache-dir -r requirements.txt
 - airflow db init
 - airflow webserver
 - airflow scheduler
