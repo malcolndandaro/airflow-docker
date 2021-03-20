@@ -32,7 +32,7 @@ Docker e docker-compose
     
 Git clone
 
-    $ sudo git clone https://github.com/malcolndandaro/airflow
+    $ sudo git clone https://github.com/malcolndandaro/airflow-docker
     
  Build & Run
  
