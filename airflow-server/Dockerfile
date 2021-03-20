@@ -30,6 +30,9 @@ RUN apt-get install -y --no-install-recommends \
 ENV AIRFLOW_HOME=/app/airflow
 ENV PATH=$PATH:~/.local/bin
 
+#20/03/2021 -BUG No SQLAlchemy > 1.4
+RUN pip3 install SQLAlchemy==1.3.23
+
 # Airflow pip install
 RUN pip3 install apache-airflow
 
